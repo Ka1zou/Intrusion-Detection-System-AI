@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Intrusion Detection System</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Intrusion Detection System</h1>
+        <p>Enter the details for prediction:</p>
+        <form id="prediction-form">
+            <input type="text" id="sample-input" placeholder="Enter features separated by commas">
+            <button type="submit">Predict</button>
+        </form>
+        <div id="prediction-result">
+            <!-- The prediction result will be displayed here -->
+        </div>
+    </div>
+    <script>
+        document.getElementById('prediction-form').onsubmit = function(e) {
+            e.preventDefault();
+            var inputValue = document.getElementById('sample-input').value;
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([inputValue.split(',')])
+            }).then(response => response.json()).then(data => {
+                document.getElementById('prediction-result').textContent = 'Prediction: ' + data;
+            }).catch(error => {
+                console.error('Error:', error);
+                document.getElementById('prediction-result').textContent = 'Error making prediction';
+            });
+        };
+    </script>
+</body>
+</html>
